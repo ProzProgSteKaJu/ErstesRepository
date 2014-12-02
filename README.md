@@ -1,4 +1,4 @@
 ErstesRepository
 ================
 
-Unser erstes, wunderschönes Repository. :)
+Unser erstes Repository für die ProzProg-Hausaufgaben. :)
