@@ -1,1 +1,203 @@
-blabla
+/*****************************************************************************
+* exercise07_form.c                                                          *
+*                                                                            *
+*   Prozedurale Programmierung WS 2014/2015 - Exercise Sheet 7               *
+*                                                                            *
+*   Task:  - write code for functions 'iterative_shuffle' & 'recusive_sort'  *
+*          - test your functions                                             *
+*                                                                            *
+*   parameter: none                                                          *
+*   return value: 0                                                          *
+*                                                                            *
+* Autor: M. Lange,                                                           *
+* E-Mail: marko.lange@tu-harburg.de                                          *
+*                                                                            *
+* Date: 29.10.2014                                                           *
+*****************************************************************************/
+
+
+/** libraries **/
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h> 
+
+/** definitions **/
+
+/** define error flags **/
+#define EVAL_SUCCESS         0
+#define ALLOCATION_FAILURE  -1
+
+
+/**
+ * Iterative implementation of recursive_shuffle
+**/
+void iterative_shuffle (float numbers[], int nr) {
+  
+  /* your code */
+  
+}
+
+
+/**
+ * Shuffles the entries of an array of floating point values.
+ * Implements the Knuth-Fisher-Yates shuffle algorithm (recursive).
+ * 
+ * @param
+ *     numbers    - array of floating point numbers
+ *     nr         - length of numbers array
+**/
+void recursive_shuffle (float numbers[], int nr) {
+  
+  float temp;
+  int k;
+  
+  if (nr<=1)
+    return;
+  
+  /* swap entries of fields nr-1 and random k */
+  k = rand() % nr;
+  nr--;
+  
+  temp = numbers[nr];
+  numbers[nr] = numbers[k];
+  numbers[k] = temp;
+  
+  /* recursive call to shuffle the rest of array */
+  recursive_shuffle(numbers,nr);
+  
+}  /* recursive_shuffle */
+
+
+/**
+ * Sorts an array of floating point numbers in ascending order.
+ * An iterative implementation of a recursive algorithm
+ * 
+ * @param
+ *     numbers    - array of floating point numbers
+ *     nr         - length of numbers array
+**/
+void iterative_sort (float numbers[], int nr) {
+  
+  int i, j, start;
+  float avg, temp;
+  
+  /* requires additional space to keep segment positions */
+  int spos = 0;  /* stack position */
+  int *stack = NULL;
+  
+  if (nr<2)
+    return;
+  
+  stack = (int *) malloc(sizeof(int)*nr);  /* on the save side */
+  if (stack==NULL){
+    printf("Error: requested memory could not be allocated");
+    return;
+  }
+  
+  /* initialize stack + starting position */
+  start = 0;
+  stack[0] = nr;
+  spos = 1;
+  
+  
+  /** main-loop: sort as long as there are segment positions in stack **/
+  while (spos>0) {
+    
+    /* get starting/ending indices of leftest segment */
+    i = start;
+    j = stack[spos-1]-1;
+    
+    /* segment length <2  =>  already sorted  =>  work on neighbour segment */
+    if (i>=j) {
+      start = stack[spos-1];
+      spos--;
+      continue;
+    }
+    
+    /* partioning of one segment into two segments */
+    avg = .5*numbers[(i+j+1)>>1] + .25*(numbers[i] + numbers[j]);
+    
+    while (1) {
+      while (i<=j && numbers[i]<=avg)
+        i++;
+      while (i<=j && numbers[j]>=avg)
+        j--;
+      if (i>=j)
+        break;
+      temp = numbers[i];
+      numbers[i] = numbers[j];
+      numbers[j] = temp;
+      i++;
+      j--;
+    }
+    
+    /* add new segment position to stack */
+    stack[spos] = i;
+    spos++;    
+    
+  }  
+  
+}  /* iterative_sort */
+
+
+/**
+ * Recursive implementation of iterative_sort   
+**/
+void recursive_sort (float numbers[], int nr) {
+     
+  /* your code */
+  
+}
+
+
+/**
+ * Helper-function to print a float-array
+**/
+void print_flarray (float numbers[], int nr) {
+  int i;
+  printf("\n");
+  for (i=0; i<nr; i++)
+    printf("%d. %.2f\n", i+1, numbers[i]);
+}
+
+
+/**
+ * call main function without input parameter
+**/
+int main (void) {
+  
+  int i, nr;
+  float *numbers = NULL;
+  srand(time(NULL));  /* start random number generater */
+  
+  printf("\n\nGeben Sie die Groesse des Feldes ein:  ");
+  scanf("%d", &nr);
+  
+  /* allocate */
+  numbers = (float *) malloc(sizeof(float)*nr);
+  if (numbers==NULL) {
+    printf("Error: Could not allocate requested memory!");
+    return ALLOCATION_FAILURE;
+  }
+  
+  /* fill array with random numbers */
+  for (i=0; i<nr; i++)
+    numbers[i] = .01 * (rand() % 1000);
+  
+  /* print numbers -initial -sorted -shuffled */
+  printf("\n\nUrsprungszustand:");
+  print_flarray(numbers,nr);
+  
+  printf("\nSortiert:");
+  iterative_sort(numbers,nr);
+  print_flarray(numbers,nr);
+  
+  printf("\nNeu gemischt:");
+  recursive_shuffle(numbers,nr);
+  print_flarray(numbers,nr);
+  
+  /* test your own implementation here */
+    
+  return EVAL_SUCCESS;
+}  /* main */
+  
