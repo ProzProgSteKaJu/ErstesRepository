@@ -34,9 +34,15 @@ Dies ist erstmal nur die Datei von stud.ip...
  * Iterative implementation of recursive_shuffle
 **/
 void iterative_shuffle (float numbers[], int nr) {
-  
-  /* your code */
-  
+
+float temp;
+int k;
+
+        for(k=0; k<=nr; k++){
+                temp=numbers[rand() %nr];
+                numbers[rand() %nr]=numbers[k];
+                numbers[k]=temp;
+        }
 }
 
 
