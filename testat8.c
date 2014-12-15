@@ -19,3 +19,4 @@ printf("Dies ist der Code in Postfixnotation:\n");
 print_postfix(prefixnotation);
 
 return 0;
+}
