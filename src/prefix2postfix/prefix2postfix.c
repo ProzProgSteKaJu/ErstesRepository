@@ -62,6 +62,11 @@ char* prefix2postfix (char* string){
         prefix2postfix(string + oplength+1);
     }
 
+    //landet noch in einer endlosschleife
+    if ((ist_1_op(string)==0)&&(ist_2_op(string)==0)){
+        *(arr)=*(string);
+    }
+
     return arr;
 }
 
@@ -85,8 +90,9 @@ int main(){
     //bestimmt die Länge, -1, da bei fgets der zeilenumbruch mitgezählt wird
     length= strlen(string)-1;
 
-    //postfix=prefix2postfix(string);
+    postfix=prefix2postfix(string);
     write(string, length);
+    write(postfix, length);
 
     return 0;
 }
