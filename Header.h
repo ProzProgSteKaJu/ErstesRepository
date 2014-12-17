@@ -1,12 +1,12 @@
-#ifndef Testat8Aufgabe_Header_h
-#define Testat8Aufgabe_Header_h
-#define MAX_OPERATION 6
+#ifndef Blatt8_Header_h
+#define Blatt8_Header_h
+#define MAX_OPERATOR 6
 #define MAX_LENGTH 42
 
 #endif
 
 
 char* operationSpeichern(char string[]);
-char* printElement( char string[]);
-int auswertung(char string[]);
+char* print_postfix( char string[]);
+int auswaertung(char string[]);
 char* printOperation(char string[]);
