@@ -57,6 +57,10 @@ char* cesarc(char* cleartext, int textlength, char key){
 **      which means that A is coded to the key letter.
 **
 *************************************************************************************************/
+        for(i=0; cleartext[i]=0; i++){
+                textlength = i;
+        }
+
 
     int count;
     char* code = (char*) malloc(textlength*sizeof(char));
