@@ -59,7 +59,7 @@ void delete_sth(struct student *z){
         return;
 }
 
-/*
+/* Ich weiss nicht, ob man das ueberhaupt braucht
 struct student *nav(int characteristic){
 
         struct student *helpptr;
@@ -81,8 +81,8 @@ void output(void){
         }
 }
 
-int main()
-{
+int main(){
+
 anchor = malloc(sizeof(struct student));
 anchor->pointer = NULL;
 anchor->Name = weissichnicht;
@@ -91,7 +91,8 @@ anchor->Number = weissichnicht;
 anchor->Address = weissichnicht;
 anchor->Courses = weissichnicht;
 
+/* Hier fehlt auch noch was, hier sollen natuerlich die ganzen Funkionen aufgerufen
+werden und so*/
 
-
-        return 0;
+return 0;
 }
