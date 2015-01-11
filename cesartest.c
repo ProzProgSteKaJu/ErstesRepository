@@ -148,7 +148,25 @@ char decodesingle(char code, char key){
     }
 } /*decodesingle*/
 
+char* codecesar(char* cleartext, char key){
+
+    int i, textlength;
+    char* codetext;
+
+    for(i=0; *(cleartext+i);i++){
+        textlength=i+1;
+    }
+
+    codetext= (char*) malloc(textlength * sizeof(char));
+
+    for(i=0; *(cleartext+i);i++){
+        *(codetext+i)=codesingle(*(cleartext+i), key);
+    }
+
+    return codetext;
+}
 int main(){
+
 
     int i,j;
     char clear='A', key='a', code, decode;
@@ -181,6 +199,14 @@ int main(){
         key++;
         clear='A';
     }
+
+    //tests if codecesar works
+    char key2 = 'B';
+    char string[]="Marmelade";
+    char* code2;
+
+    code2 = codecesar(string, key2);
+    printf("\n\n%s wird mit %c zu %s\n", string, key2, code2);
 
     return 0;
 }
