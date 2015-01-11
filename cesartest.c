@@ -284,58 +284,80 @@ char* codevigenere(char* cleartext, char* keyword){
     return codetext;
 }/*codevigenere*/
 
-int main(){
+//still counts empty spaces for decoding, ask Lasse
+char* decodevigenere(char* codetext, char* keyword){
+/* function decodevigenere *****************************************************************************
+**
+** Decodevigenere decodes a text by using the polyalphabetical cesar chiffre with a keyword.
+** The first letter of keyword will be used to decode the first letter of cleartext with cesar,
+** the 2nd for the 2nd, ..., starts again with the first letter of keyword when the end is reached.
+**
+** needs: decodesingle, IsUpperCase, IsLowerCase
+**
+** input:
+**      char* codetext: text that will be decoded
+**      char* keyword: contains the different key letters
+** output:
+**      char* that contains the decoded text
+**
+****************************************************************************************************/
 
-    /*int i,j;
-    char clear='A', key='a', code, decode;
+    //cleartext for the result, keyletter for the char in keyword that is used
+    //i for counting, textlength for length of codetext, keylength for length of keyword
+    char* cleartext;
+    char keyletter;
+    int i, textlength, keylength;
 
-    //Tests, if Codesingle and  decodesingle work for lower case key letters
-    for (j=0;key<='e';j++){
-        printf("\nSchluesselbuchstabe: %c\n", key);
-        for(i=0;clear<='z';i++){
-            code=codesingle(clear, key);
-            printf("%c -> %c", clear, code);
-            decode=decodesingle(code, key);
-            printf(" -> %c\t", decode);
-            clear++;
-        }
-        key++;
-        clear='A';
+    //counts textlength while *(codetext+i) because codetext ends with \0
+    //increases textlength by 1, because an additional char is needed for the cleartext to end
+    for(i = 0; *(codetext+i); i++){
+        textlength = i + 1;
+    }
+    textlength++;
+    //counts keylength
+    for(i = 0; *(keyword+i); i++){
+        keylength = i + 1;
     }
 
-    //Tests, if codesingle and decodesingle work for upper case key letters
-    key='A';
-    for (j=0;key<='D';j++){
-        printf("\nSchluesselbuchstabe: %c\n", key);
-        for(i=0;clear<='z';i++){
-            code=codesingle(clear, key);
-            printf("%c -> %c", clear, code);
-            decode=decodesingle(code, key);
-            printf(" -> %c\t", decode);
-            clear++;
-        }
-        key++;
-        clear='A';
-    }*/
+    //allocates memory for cleartext
+    cleartext = (char*) malloc(textlength * sizeof(char));
 
-    //tests if codecesar works
-    char key2 = 'B';
+    //Decoding here, keyletter is nr. i%keylength of keyword
+    for(i=0; *(codetext+i); i++){
+        keyletter = *(keyword+(i%keylength));
+        *(cleartext+i) = decodesingle(*(codetext+i), keyletter);
+    }
+    //ends the cleartext
+    *(cleartext+textlength-1) = '\0';
+
+    return cleartext;
+}/*decodevigenere*/
+
+int main(){
+
+    //tests if codecesar and decodecesar work
+    char key = 'B';
     char string[] = "Marmelade schmeckt echt gut!";
-    char* code2;
-    char* decode2;
+    char* code;
+    char* decode;
 
-    code2 = codecesar(string, key2);
-    printf("\nCAESAR-CODIERUNG und DECODIERUNG\n%s wird mit dem Schluessel %c codiert zu\n%s\n", string, key2, code2);
+    code = codecesar(string, key);
+    printf("CAESAR-CODIERUNG und DECODIERUNG\n%s wird mit dem Schluessel %c codiert zu\n%s\n", string, key, code);
 
-    decode2 = decodecesar(code2, key2);
-    printf("und wieder entschluesselt zu:\n%s\n", decode2);
+    decode = decodecesar(code, key);
+    printf("und wieder entschluesselt zu:\n%s\n", decode);
 
+    //tests if codevigenere and decodevigenere work
     char cleartext[] = "Marmelade schmeckt echt gut!";
     char keyword[] = "ABCD";
-    char* code3;
+    char* codetext;
+    char* decodedtext;
 
-    code3 = codevigenere(cleartext, keyword);
-    printf("\nVIGENERE-CODIERUNG\n%s wird mit dem Schluesselwort %s codiert zu\n%s\n", cleartext, keyword, code3);
+    codetext = codevigenere(cleartext, keyword);
+    printf("\nVIGENERE-CODIERUNG\n%s wird mit dem Schluesselwort %s codiert zu\n%s\n", cleartext, keyword, codetext);
+
+    decodedtext = decodevigenere(codetext, keyword);
+    printf("und wieder entschluesselt zu:\n%s\n", decodedtext);
 
     return 0;
 }
