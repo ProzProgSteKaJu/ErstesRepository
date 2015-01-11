@@ -3,7 +3,7 @@
 #include <strings.h>
 
 int IsUpperCase(char letter){
-/* function IsUpperCase ***************************************************************************
+/* function IsUpperCase ***************************************
 **
 ** checks if a letter is an uppercase letter (quite obvious)
 **
@@ -12,7 +12,7 @@ int IsUpperCase(char letter){
 ** output:
 **      1 if letter is uppercase, 0 else
 **
-*************************************************************************************************/
+**************************************************************/
     if (('A' <= letter)&&(letter <= 'Z')){
         return 1;
     }
@@ -22,7 +22,7 @@ int IsUpperCase(char letter){
 } /*IsUpperCase*/
 
 int IsLowerCase(char letter){
-/* function IsLowerCase ***************************************************************************
+/* function IsLowerCase ****************************************
 **
 ** checks if a letter is an lowercase letter (quite obvious)
 **
@@ -31,7 +31,7 @@ int IsLowerCase(char letter){
 ** output:
 **      1 if letter is lowercase, 0 else
 **
-*************************************************************************************************/
+****************************************************************/
     if (('a' <= letter)&&(letter <= 'z')){
         return 1;
     }
@@ -41,12 +41,14 @@ int IsLowerCase(char letter){
 } /*IsLowerCase*/
 
 char codesingle(char clear, char key){
-/* function codesingle *****************************************************************************
+/* function codesingle **************************************************************************************
 **
 ** Codesingle shifts a clear letter by UpperCase(key)-'A' and returns the coded char.
 ** If the end of the alphabet is reached, clear will be shifted backwards.
 ** Any char will be accepted for clear and key, but if clear is not a letter, it will be returned as it is,
 ** if key is not a letter, any clear letter will be returned as it is
+**
+** needs: IsUpperCase, IsLowerCase
 **
 ** input:
 **      char clear: letter that will be coded
@@ -54,7 +56,7 @@ char codesingle(char clear, char key){
 ** output:
 **      char that contains the coded char
 **
-****************************************************************************************************/
+************************************************************************************************************/
 
     //shift is the difference between key and a/A
     //letternumber is the difference between clear and a/A, used to check if backshift is neccessary
@@ -85,22 +87,24 @@ char codesingle(char clear, char key){
     }
 
     //returns shifted clear
-    if (shift+letternumber<26){
-        return clear+shift;
+    if (shift + letternumber < 26){
+        return clear + shift;
     }
     //backshift if a char behind z/Z would be reached
     else{
-        return clear+shift-26;
+        return clear + shift - 26;
     }
 } /*codesingle*/
 
 char decodesingle(char code, char key){
-/* function decodesingle *****************************************************************************
+/* function decodesingle *********************************************************************************
 **
 ** Decodesingle shifts a code letter by UpperCase(key)-'A' backwards and returns the decoded char.
 ** If the end of the alphabet is reached, code will be shifted forwards.
 ** Any char will be accepted for code and key, but if code is not a letter, it will be returned as it is,
 ** if key is not a letter, any code will be returned as it is
+**
+** needs: IsUpperCase, IsLowerCase
 **
 ** input:
 **      char code: letter that will be decoded
@@ -108,7 +112,7 @@ char decodesingle(char code, char key){
 ** output:
 **      char that contains the decoded char
 **
-****************************************************************************************************/
+*********************************************************************************************************/
 
     //shift is the difference between key and a/A
     //letternumber is the difference between code and a/A, used to check if shifting forwards is neccessary
@@ -139,34 +143,57 @@ char decodesingle(char code, char key){
     }
 
     //returns code shifted backwards
-    if (letternumber>=shift){
-        return code-shift;
+    if (letternumber >= shift){
+        return code - shift;
     }
     //returns code shifted forwards
     else{
-        return code-shift+26;
+        return code - shift + 26;
     }
 } /*decodesingle*/
 
 char* codecesar(char* cleartext, char key){
+/* function codecesar *****************************************************************************
+**
+** Codecesar codes a text by using the cesar chiffre with the same key for the whole text.
+** Cesar shifts a/A to the lower/upper case key letter and then continues with the alphabet
+** until z/z is reached, then starts agin with a/A.
+**
+** needs: codesingle, IsUpperCase, IsLowerCase
+**
+** input:
+**      char* cleartext: text that will be coded
+**      char key: A will be shifted to Uppercase(key)
+** output:
+**      char that contains the coded char
+**
+****************************************************************************************************/
 
+    //i for counting, textlength for length of cleartext, codetext will be returned
     int i, textlength;
     char* codetext;
 
-    for(i=0; *(cleartext+i);i++){
-        textlength=i+1;
+    //counts textlength because cleartext ends with \0
+    for(i = 0; *(cleartext+i); i++){
+        textlength = i + 1;
     }
+    //increases textlength, because an additional char is needed for the code to end
+    textlength++;
 
-    codetext= (char*) malloc(textlength * sizeof(char));
+    //allocates memory for the coded text
+    codetext = (char*) malloc(textlength * sizeof(char));
 
-    for(i=0; *(cleartext+i);i++){
-        *(codetext+i)=codesingle(*(cleartext+i), key);
+    //Codes every single char of cleartext with codesingle
+    for(i=0; *(cleartext+i); i++){
+        *(codetext+i) = codesingle(*(cleartext+i), key);
     }
+    //Ends the codetext with \0
+    *(codetext+textlength-1) = '\0';
 
     return codetext;
-}
-int main(){
+} /*Codecesar*/
 
+int main(){
 
     int i,j;
     char clear='A', key='a', code, decode;
@@ -202,11 +229,11 @@ int main(){
 
     //tests if codecesar works
     char key2 = 'B';
-    char string[]="Marmelade";
+    char string[]="Marmelade schmeckt echt gut!";
     char* code2;
 
     code2 = codecesar(string, key2);
-    printf("\n\n%s wird mit %c zu %s\n", string, key2, code2);
+    printf("\n\n%s wird mit dem Schluessel %c zu\n%s\n", string, key2, code2);
 
     return 0;
 }
