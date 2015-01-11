@@ -165,7 +165,7 @@ char* codecesar(char* cleartext, char key){
 **      char* cleartext: text that will be coded
 **      char key: A will be shifted to Uppercase(key)
 ** output:
-**      char that contains the coded char
+**      char that contains the coded text
 **
 ****************************************************************************************************/
 
@@ -174,10 +174,10 @@ char* codecesar(char* cleartext, char key){
     char* codetext;
 
     //counts textlength because cleartext ends with \0
+    //increases textlength by 1, because an additional char is needed for the codetext to end
     for(i = 0; *(cleartext+i); i++){
         textlength = i + 1;
     }
-    //increases textlength, because an additional char is needed for the code to end
     textlength++;
 
     //allocates memory for the coded text
@@ -192,6 +192,47 @@ char* codecesar(char* cleartext, char key){
 
     return codetext;
 } /*Codecesar*/
+
+char* decodecesar(char* codetext, char key){
+/* function decodecesar *****************************************************************************
+**
+** Decodecesar decodes a text by using the cesar chiffre with the same key for the whole text.
+** Cesar shifts a/A to the lower/upper case key letter and then continues with the alphabet
+** until z/z is reached, then starts agin with a/A. Decodecesar inverts this process.
+**
+** needs: decodesingle, IsUpperCase, IsLowerCase
+**
+** input:
+**      char* codetext: text that will be decoded
+**      char key: Uppercase(key) will be shifted to A
+** output:
+**      char that contains the decoded text
+**
+****************************************************************************************************/
+
+    //i for counting, textlength for length of codetext, cleartext will be returned
+    int i, textlength;
+    char* cleartext;
+
+    //counts textlength because cleartext ends with \0
+    //increases textlength by 1, because an additional char is needed for the cleartext to end
+    for(i = 0; *(codetext+i); i++){
+        textlength = i + 1;
+    }
+    textlength++;
+
+    //allocates memory for the decoded text
+    cleartext = (char*) malloc(textlength * sizeof(char));
+
+    //Decodes every single char of cleartext with decodesingle
+    for(i=0; *(codetext+i); i++){
+        *(cleartext+i) = decodesingle(*(codetext+i), key);
+    }
+    //Ends the codetext with \0
+    *(cleartext+textlength-1) = '\0';
+
+    return cleartext;
+} /*Decodecesar*/
 
 int main(){
 
@@ -231,9 +272,13 @@ int main(){
     char key2 = 'B';
     char string[]="Marmelade schmeckt echt gut!";
     char* code2;
+    char* decode2;
 
     code2 = codecesar(string, key2);
     printf("\n\n%s wird mit dem Schluessel %c zu\n%s\n", string, key2, code2);
+
+    decode2 = decodecesar(code2, key2);
+    printf("und wieder entschluesselt zu:\n%s\n", decode2);
 
     return 0;
 }
