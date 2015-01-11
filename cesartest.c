@@ -165,7 +165,7 @@ char* codecesar(char* cleartext, char key){
 **      char* cleartext: text that will be coded
 **      char key: A will be shifted to Uppercase(key)
 ** output:
-**      char that contains the coded text
+**      char* that contains the coded text
 **
 ****************************************************************************************************/
 
@@ -206,7 +206,7 @@ char* decodecesar(char* codetext, char key){
 **      char* codetext: text that will be decoded
 **      char key: Uppercase(key) will be shifted to A
 ** output:
-**      char that contains the decoded text
+**      char* that contains the decoded text
 **
 ****************************************************************************************************/
 
@@ -234,9 +234,59 @@ char* decodecesar(char* codetext, char key){
     return cleartext;
 } /*Decodecesar*/
 
+//still counts empty spaces for coding, e.g. "AA AA" with the keyword "ABC" will be coded into "AB AB", not "AB CA"
+//ask Lasse whether that is ok or whether this should be changed
+char* codevigenere(char* cleartext, char* keyword){
+/* function codevigenere *****************************************************************************
+**
+** Codevigenere codes a text by using the polyalphabetical cesar chiffre with a keyword.
+** The first letter of keyword will be used to code the first letter of cleartext with cesar,
+** the 2nd for the 2nd, ..., starts again with the first letter of keyword when the end is reached.
+**
+** needs: codesingle, IsUpperCase, IsLowerCase
+**
+** input:
+**      char* cleartext: text that will be coded
+**      char* keyword: contains the different key letters
+** output:
+**      char* that contains the coded text
+**
+****************************************************************************************************/
+
+    //codetext for the result, keyletter for the char in keyword that is used
+    //i for counting, textlength for length of cleartext, keylength for length of keyword
+    char* codetext;
+    char keyletter;
+    int i, textlength, keylength;
+
+    //counts textlength while *(cleartext+i) because cleartext ends with \0
+    //increases textlength by 1, because an additional char is needed for the codetext to end
+    for(i = 0; *(cleartext+i); i++){
+        textlength = i + 1;
+    }
+    textlength++;
+    //counts keylength
+    for(i = 0; *(keyword+i); i++){
+        keylength = i + 1;
+    }
+
+    //allocates memory for codetext
+    codetext = (char*) malloc(textlength * sizeof(char));
+
+    //Coding here, keyletter is nr. i%keylength of keyword
+    for(i=0; *(cleartext+i); i++){
+        keyletter = *(keyword+(i%keylength));
+        *(codetext+i) = codesingle(*(cleartext+i), keyletter);
+    }
+    //ends the codetext
+    *(codetext+textlength-1) = '\0';
+
+    return codetext;
+}/*codevigenere*/
+
 int main(){
 
-    int i,j;
+    /*int i,j;
     char clear='A', key='a', code, decode;
 
     //Tests, if Codesingle and  decodesingle work for lower case key letters
@@ -266,19 +316,26 @@ int main(){
         }
         key++;
         clear='A';
-    }
+    }*/
 
     //tests if codecesar works
     char key2 = 'B';
-    char string[]="Marmelade schmeckt echt gut!";
+    char string[] = "Marmelade schmeckt echt gut!";
     char* code2;
     char* decode2;
 
     code2 = codecesar(string, key2);
-    printf("\n\n%s wird mit dem Schluessel %c zu\n%s\n", string, key2, code2);
+    printf("\nCAESAR-CODIERUNG und DECODIERUNG\n%s wird mit dem Schluessel %c codiert zu\n%s\n", string, key2, code2);
 
     decode2 = decodecesar(code2, key2);
     printf("und wieder entschluesselt zu:\n%s\n", decode2);
+
+    char cleartext[] = "Marmelade schmeckt echt gut!";
+    char keyword[] = "ABCD";
+    char* code3;
+
+    code3 = codevigenere(cleartext, keyword);
+    printf("\nVIGENERE-CODIERUNG\n%s wird mit dem Schluesselwort %s codiert zu\n%s\n", cleartext, keyword, code3);
 
     return 0;
 }
