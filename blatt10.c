@@ -4,10 +4,10 @@
 
 struct student{
 
-        char Name;
-        char Surname;
+        char Name[10];
+        char Surname[15];
         int Number;
-        char Address;
+        char Address[20];
         int Courses;
         struct student *nextpointer;
         struct student *prevpointer;
@@ -22,12 +22,12 @@ void add(struct student *anchor, char firstn, char lastn, int no, char addr, int
         while(ptr -> nextpointer != NULL)
                 ptr = ptr -> nextpointer;
         helpptr = malloc(sizeof(struct student));
-        helpptr->Name = firstn;
-        helpptr->Surname = lastn;
+        helpptr->Name[] = firstn;
+        helpptr->Surname[] = lastn;
         helpptr->Number = no;
-        helpptr->Address = addr;
+        helpptr->Address[] = addr;
         helpptr->Courses = courses;
-        helpptr->pointer = NULL;
+        helpptr->nextpointer = NULL;
         ptr->nextpointer = helpptr;
         return;
 
@@ -37,10 +37,10 @@ void insert_sth(struct student *z, char firstn, char lastn, int no, char addr, i
 
         struct student *helpptr, *help1ptr;
         helpptr = malloc(sizeof(struct student));
-        helpptr->Name = firstn;
-        helpptr->Surname = lastn;
+        helpptr->Name[] = firstn;
+        helpptr->Surname[] = lastn;
         helpptr->Number = no;
-        helpptr->Address = addr;
+        helpptr->Address[] = addr;
         helpptr->Courses = courses;
         help1ptr = z->nextpointer;
         helpptr->nextpointer = z->nextpointer;
@@ -56,8 +56,8 @@ void delete_sth(struct student *z){
         helpptr = anchor;
 
         while(helpptr->prevpointer != z)
-                helpptr = helpptr->pointer;
-        helpptr->pointer = z->pointer;
+                helpptr = helpptr->prevpointer;
+        helpptr->prevpointer = z->prevpointer;
         free(z);
         return;
 }
@@ -80,22 +80,27 @@ void output(void){
 
         while(helpptr != NULL){
                 printf("\n%c \n%c \n%d \n%c \n%d", helpptr->Name, helpptr->Surname, helpptr->Number, helpptr->Address, helpptr->Courses);
-                helpptr = helpptr->pointer;
+                helpptr = helpptr->nextpointer;
         }
+}
+
+void swap_elements(){
+
 }
 
 int main(){
 
 anchor = malloc(sizeof(struct student));
-anchor->pointer = NULL;
-anchor->Name = weissichnicht;
-anchor->Surname = weissichnicht;
-anchor->Number = weissichnicht;
-anchor->Address = weissichnicht;
-anchor->Courses = weissichnicht;
+anchor->nextpointer = NULL;
+anchor->Name[] = "Max";
+anchor->Surname[] = "Maximov";
+anchor->Number = 22222;
+anchor->Address[] = "SBS 95 R.0009";
+anchor->Courses = 12;
+add(anchor, "Lina", "Tux" , 33333 , "DE 22 AUD II", 10);
+insert_sth(anchor, "Ela", "Klopp", 44444, "SBS 95 AUD I", 0);
+output();
 
-/* Hier fehlt auch noch was, hier sollen natuerlich die ganzen Funkionen aufgerufen
-werden und so*/
 
 return 0;
 }
