@@ -19,8 +19,8 @@ void add(struct student *anchor, char firstn, char lastn, int no, char addr, int
         struct student *ptr, *helpptr;
         ptr = anchor;
 
-        while(ptr -> pointer != NULL)
-                ptr = ptr -> pointer;
+        while(ptr -> nextpointer != NULL)
+                ptr = ptr -> nextpointer;
         helpptr = malloc(sizeof(struct student));
         helpptr->Name = firstn;
         helpptr->Surname = lastn;
@@ -28,22 +28,25 @@ void add(struct student *anchor, char firstn, char lastn, int no, char addr, int
         helpptr->Address = addr;
         helpptr->Courses = courses;
         helpptr->pointer = NULL;
-        ptr->pointer = helpptr;
+        ptr->nextpointer = helpptr;
         return;
 
 }
 
 void insert_sth(struct student *z, char firstn, char lastn, int no, char addr, int courses){
 
-        struct student *helpptr;
+        struct student *helpptr, *help1ptr;
         helpptr = malloc(sizeof(struct student));
         helpptr->Name = firstn;
         helpptr->Surname = lastn;
         helpptr->Number = no;
         helpptr->Address = addr;
         helpptr->Courses = courses;
-        helpptr->pointer = z->pointer;
-        z->pointer = helpptr;
+        help1ptr = z->nextpointer;
+        helpptr->nextpointer = z->nextpointer;
+        z->nextpointer = helpptr;
+        helpptr->prevpointer = z;
+        z->prevpointer = helpptr;
         return;
 }
 
@@ -52,14 +55,14 @@ void delete_sth(struct student *z){
         struct student *helpptr;
         helpptr = anchor;
 
-        while(helpptr->pointer != z)
+        while(helpptr->prevpointer != z)
                 helpptr = helpptr->pointer;
         helpptr->pointer = z->pointer;
         free(z);
         return;
 }
 
-/* Ich weiss nicht, ob man das ueberhaupt braucht
+/*
 struct student *nav(int characteristic){
 
         struct student *helpptr;
