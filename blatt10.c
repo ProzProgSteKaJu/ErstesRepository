@@ -4,13 +4,15 @@
 
 struct student{
 
-        char Name[10];
-        char Surname[15];
+        char *Name;
+        char *Surname;
         int Number;
-        char Address[20];
+        char *Address;
         int Courses;
         struct student *nextpointer;
         struct student *prevpointer;
+
+
 };
 struct student *anchor;
 
@@ -22,10 +24,10 @@ void add(struct student *anchor, char firstn, char lastn, int no, char addr, int
         while(ptr -> nextpointer != NULL)
                 ptr = ptr -> nextpointer;
         helpptr = malloc(sizeof(struct student));
-        helpptr->Name[] = firstn;
-        helpptr->Surname[] = lastn;
+        helpptr->Name = firstn;
+        helpptr->Surname = lastn;
         helpptr->Number = no;
-        helpptr->Address[] = addr;
+        helpptr->Address = addr;
         helpptr->Courses = courses;
         helpptr->nextpointer = NULL;
         ptr->nextpointer = helpptr;
@@ -37,10 +39,10 @@ void insert_sth(struct student *z, char firstn, char lastn, int no, char addr, i
 
         struct student *helpptr, *help1ptr;
         helpptr = malloc(sizeof(struct student));
-        helpptr->Name[] = firstn;
-        helpptr->Surname[] = lastn;
+        helpptr->Name = firstn;
+        helpptr->Surname = lastn;
         helpptr->Number = no;
-        helpptr->Address[] = addr;
+        helpptr->Address = addr;
         helpptr->Courses = courses;
         help1ptr = z->nextpointer;
         helpptr->nextpointer = z->nextpointer;
@@ -92,13 +94,13 @@ int main(){
 
 anchor = malloc(sizeof(struct student));
 anchor->nextpointer = NULL;
-anchor->Name[] = "Max";
-anchor->Surname[] = "Maximov";
+anchor->Name = "Max";
+anchor->Surname = "Maximov";
 anchor->Number = 22222;
-anchor->Address[] = "SBS 95 R.0009";
+anchor->Address = "SBS 95 R.0009";
 anchor->Courses = 12;
-add(anchor, "Lina", "Tux" , 33333 , "DE 22 AUD II", 10);
-insert_sth(anchor, "Ela", "Klopp", 44444, "SBS 95 AUD I", 0);
+add(anchor, "Ela", "Klopp", 44444, "SBS 95 AUD I", 0);
+insert_sth(anchor, "Lina", "Tux" , 33333 , "DE 22 AUD II", 10);
 output();
 
 
