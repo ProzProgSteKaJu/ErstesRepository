@@ -16,7 +16,7 @@ struct student{
 };
 struct student *anchor;
 
-void add(struct student *anchor, char firstn, char lastn, int no, char addr, int courses){
+void add(struct student *anchor, char* firstn, char* lastn, int no, char* addr, int courses){
 
         struct student *ptr, *helpptr;
         ptr = anchor;
@@ -35,7 +35,7 @@ void add(struct student *anchor, char firstn, char lastn, int no, char addr, int
 
 }
 
-void insert_sth(struct student *z, char firstn, char lastn, int no, char addr, int courses){
+void insert_sth(struct student *z, char* firstn, char* lastn, int no, char* addr, int courses){
 
         struct student *helpptr, *help1ptr;
         helpptr = malloc(sizeof(struct student));
@@ -81,7 +81,7 @@ void output(void){
         helpptr = anchor;
 
         while(helpptr != NULL){
-                printf("\n%c \n%c \n%d \n%c \n%d", helpptr->Name, helpptr->Surname, helpptr->Number, helpptr->Address, helpptr->Courses);
+                printf("\n%s \n%s \n%d \n%s \n%d \n", helpptr->Name, helpptr->Surname, helpptr->Number, helpptr->Address, helpptr->Courses);
                 helpptr = helpptr->nextpointer;
         }
 }
