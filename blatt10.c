@@ -35,7 +35,11 @@ void add(struct student *anchor, char* firstn, char* lastn, int no, char* addr, 
 
 }
 
+<<<<<<< HEAD
 void insert_sth(struct student *z, char *firstn, char *lastn, int no, char *addr, int courses){
+=======
+void insert_sth(struct student *z, char* firstn, char* lastn, int no, char* addr, int courses){
+>>>>>>> origin/master
 
         struct student *helpptr, *help1ptr;
         helpptr = malloc(sizeof(struct student));
