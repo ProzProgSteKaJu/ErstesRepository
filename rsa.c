@@ -39,6 +39,26 @@ unsigned long int decodingsingle(int cipher, unsigned long int d, unsigned long 
     return message;
 }
 
+unsigned long int make_ascii_letter(unsigned long int letter){
+
+    unsigned long int ascii=letter;
+    unsigned long int i;
+
+    if(letter>90){
+        for(i=1;ascii>90;i++){
+            ascii -= 26;
+        }
+    }
+
+    if(letter<65){
+        for(i=1;ascii<65;i++){
+            ascii += 26;
+        }
+    }
+
+    return ascii;
+}
+
 int main(){
 
     unsigned long int p=13, q=17;
@@ -51,11 +71,13 @@ int main(){
     //e*d=1 mod Phi here: d=167
     d = find_d(e,Phi);
 
-    message = 5;
+    message = 116;
     cipher = codingsingle(message, e,N);
     test = decodingsingle(cipher, d, N);
 
     printf("message:%lu e:%lu N:%lu\ncipher: %lu\ntest: %lu\n", message, e, N, cipher, test);
+
+    printf("cipher:%lu asciicipher:%lu", cipher, make_ascii_letter(cipher));
 
     return 0;
 }
