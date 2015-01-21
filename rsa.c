@@ -62,22 +62,48 @@ unsigned long int make_ascii_letter(unsigned long int letter){
 int main(){
 
     unsigned long int p=13, q=17;
-    unsigned long int N, Phi, e, d, cipher, message, test;
+    unsigned long int N, Phi, e, d;
 
+    //initialization of N,Phi,e and d
     N = p*q;
     Phi = (p-1)*(q-1);
-    //Waehle 1<e<Phi mit e teilerfremd zu Phi
     e = 23;
-    //e*d=1 mod Phi here: d=167
     d = find_d(e,Phi);
 
-    message = 116;
-    cipher = codingsingle(message, e,N);
-    test = decodingsingle(cipher, d, N);
 
-    printf("message:%lu e:%lu N:%lu\ncipher: %lu\ntest: %lu\n", message, e, N, cipher, test);
 
-    printf("cipher:%lu asciicipher:%lu", cipher, make_ascii_letter(cipher));
+    char input[200];
+    char* coded_text;
+    char* decoded_text;
+    int i, textlength;
+    unsigned long int* coded_numbers;
+    unsigned long int* decoded_numbers;
+
+
+    printf("Geben Sie bitte den Text ein:\n");
+    fgets(input, 200, stdin);
+
+    for(i=0;*(input+i);i++){
+        textlength = i;
+    }
+    coded_text = (char*) malloc(textlength*sizeof(char));
+    decoded_text = (char*) malloc(textlength*sizeof(char));
+    coded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
+    decoded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
+
+    printf("\nMit RSA verschluesselt lautet Ihr Text:\n");
+    for(i = 0; i < textlength; i++){
+        *(coded_numbers+i) = codingsingle(*(input+i), e, N);
+        *(coded_text+i)=make_ascii_letter(*(coded_numbers+i));
+        printf("%c", *(coded_text+i));
+    }
+
+    printf("\n\nWieder entschluesselt lautet der Text:\n");
+    for(i = 0; i < textlength; i++){
+        *(decoded_numbers+i) = decodingsingle(*(coded_numbers+i), e, N);
+        *(decoded_text+i)=*(decoded_numbers+i);
+        printf("%c", *(decoded_text+i));
+    }
 
     return 0;
 }
