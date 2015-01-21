@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#define CESAR 1
+#define VIGENERE 2
+#define CODING 5
+#define DECODING 6
+
 int IsUpperCase(char letter){
 /* function IsUpperCase ***************************************
 **
@@ -234,8 +239,6 @@ char* decodecesar(char* codetext, char key){
     return cleartext;
 } /*Decodecesar*/
 
-//still counts empty spaces for coding, e.g. "AA AA" with the keyword "ABC" will be coded into "AB AB", not "AB CA"
-//ask Lasse whether that is ok or whether this should be changed
 char* codevigenere(char* cleartext, char* keyword){
 /* function codevigenere *****************************************************************************
 **
@@ -284,7 +287,6 @@ char* codevigenere(char* cleartext, char* keyword){
     return codetext;
 }/*codevigenere*/
 
-//still counts empty spaces for decoding, ask Lasse
 char* decodevigenere(char* codetext, char* keyword){
 /* function decodevigenere *****************************************************************************
 **
@@ -335,7 +337,7 @@ char* decodevigenere(char* codetext, char* keyword){
 
 int main(){
 
-    //tests if codecesar and decodecesar work
+    /*//tests if codecesar and decodecesar work
     char key = 'B';
     char string[] = "Marmelade schmeckt echt gut!";
     char* code;
@@ -357,7 +359,58 @@ int main(){
     printf("\nVIGENERE-CODIERUNG\n%s wird mit dem Schluesselwort %s codiert zu\n%s\n", cleartext, keyword, codetext);
 
     decodedtext = decodevigenere(codetext, keyword);
-    printf("und wieder entschluesselt zu:\n%s\n", decodedtext);
+    printf("und wieder entschluesselt zu:\n%s\n", decodedtext);*/
+    char method[3];
+    char direction[3];
+    char message[200];
+    char cipher[200];
+    char key[3];
+    char keyword[30];
+    char* codetextcesar;
+    char* codetextvigenere;
+    char keyletter;
+    int chosenmethod, chosendirection;
+
+    printf("Mit welcher Methode wollen Sie verschluesseln?\n'C': Caesarcode\n'V': Vigenere-Verschluesselung\n");
+    fgets(method, 3, stdin);
+
+    printf("\nWollen Sie codieren oder decodieren?\n'c': Codieren\n'd': Decodieren\n");
+    fgets(direction, 3, stdin);
+
+    switch(*(method)){
+        case 'C': chosenmethod = CESAR; break;
+        case 'V': chosenmethod = VIGENERE; break;
+        default: printf("Falsche Eingabe: bitte C oder V eingeben! "); break;
+    }
+    switch(*(direction)){
+        case 'c': chosendirection = CODING; break;
+        case 'd': chosendirection = DECODING; break;
+        default: printf("Falsche Eingabe: bitte c oder d eingeben!"); break;
+    }
+
+    switch(chosendirection){
+        case CODING:    printf("\nBitte geben Sie den zu verschluesselnden Text ein:\n");
+                        fgets(message, 200, stdin);
+                        switch(chosenmethod){
+                            case CESAR: printf("\nBitte geben Sie den Schluesselbuchstaben ein:\n");
+                            fgets(key, 3, stdin);
+                            keyletter = *(key);
+                            codetextcesar = codecesar(message, keyletter);
+                            printf("\nVerschluesselt ist dies:\n%s\n", codetextcesar);
+                            break;
+                            case VIGENERE: printf("\nBitte geben Sie das Schluesselwort ein:\n");
+                            fgets(keyword, 30, stdin);
+                            codetextvigenere = codevigenere(message, keyword);
+                            printf("\nVerschluesselt ist dies:\n%s\n", codetextcesar);
+                            break;
+                            default: printf("Error!"); break;
+                        }
+                        break;
+        case DECODING:  printf("Bitte geben Sie den zu entschluesselnden Text ein:\n");
+                        fgets(cipher, 200, stdin);
+                        break;
+        default: printf("Error"); break;
+    }
 
     return 0;
 }
