@@ -127,7 +127,7 @@ char decodesingle(char code, char key){
     // initialization of shift depending on whether key is upper or lower case
     // returns the code char if key is not a letter*/
     if ((IsLowerCase(key) == 0) && (IsUpperCase(key) == 0)){
-        printf("Bitte geben Sie einen Buchstaben als Schluessel ein!");
+        printf("Bitte geben Sie einen Buchstaben als Schluessel ein!\n");
         return code;
     }
     if (IsUpperCase(key)){
@@ -333,6 +333,7 @@ char* decodevigenere(char* codetext, char* keyword){
     //ends the message
     *(message+textlength-1) = '\0';
 
+
     return message;
 }/*decodevigenere*/
 
@@ -458,20 +459,20 @@ int main(){
         }
 
     switch(chosendirection){
-        case CODING:    printf("\n Bitte geben Sie den zu verschluesselnden Text ein:\n");
+        case CODING:    printf("\n Bitte geben Sie den zu verschluesselnden Text ein:\n ");
                         fgets(message, 200, stdin);
                         switch(chosenmethod){
-                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n");
+                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
                             fgets(key, 3, stdin);
                             keyletter = *(key);
                             codetextcesar = codecesar(message, keyletter);
-                            printf("\n Verschluesselt ist dies:\n%s\n", codetextcesar);
+                            printf("\n Verschluesselt ist dies:\n%s\n ", codetextcesar);
                             break;
 
-                            case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n");
+                            case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
                             fgets(keyword, 30, stdin);
                             codetextvigenere = codevigenere(message, keyword);
-                            printf("\n Verschluesselt ist dies:\n%s\n", codetextvigenere);
+                            printf("\n Verschluesselt ist dies:\n%s\n ", codetextvigenere);
                             break;
 
                             default: printf("Error!"); break;
@@ -480,17 +481,17 @@ int main(){
         case DECODING:  printf(" Bitte geben Sie den zu entschluesselnden Text ein:\n");
                         fgets(cipher, 200, stdin);
                         switch(chosenmethod){
-                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n");
+                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
                             fgets(key, 3, stdin);
                             keyletter = *(key);
                             messagecesar = decodecesar(cipher, keyletter);
-                            printf("Entschluesselt ist dies:\n%s\n", messagecesar);
+                            printf("Entschluesselt ist dies:\n%s\n ", messagecesar);
                             break;
 
-                            case VIGENERE: printf("\nBitte geben Sie das Schluesselwort ein:\n");
+                            case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
                             fgets(keyword, 30, stdin);
                             messagevigenere = decodevigenere(cipher, keyword);
-                            printf(" Entschluesselt ist dies:\n%s\n", messagevigenere);
+                            printf(" Entschluesselt ist dies:\n%s\n ", messagevigenere);
                             break;
 
                             default: printf("Error!"); break;
