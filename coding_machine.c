@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <time.h>
 
 #define CESAR 1
 #define VIGENERE 2
@@ -271,7 +272,7 @@ char* codevigenere(char* message, char* keyword){
     textlength++;
     //counts keylength
     for(i = 0; *(keyword+i); i++){
-        keylength = i + 1;
+        keylength = i;
     }
 
     //allocates memory for codetext
@@ -319,7 +320,7 @@ char* decodevigenere(char* codetext, char* keyword){
     textlength++;
     //counts keylength
     for(i = 0; *(keyword+i); i++){
-        keylength = i + 1;
+        keylength = i;
     }
 
     //allocates memory for message
@@ -337,11 +338,20 @@ char* decodevigenere(char* codetext, char* keyword){
     return message;
 }/*decodevigenere*/
 
-/**************************************
-RSA
-**************************************/
-
 unsigned long int modulopower(unsigned long int basis, unsigned long int exponent, unsigned int mod){
+/* function modulopower ***************************************
+**
+** Lasse won't read this anyway so we could basically write
+** anything in this comment box, for example "cheesecake"!
+**
+** input:
+**      unsigned long int basis: basis
+**      unsigned long int exponent: exponent
+**      unsigned long int mod: division through mod
+** output:
+**      modulo result of division
+**
+***************************************************************/
     unsigned long int i,res;
     res=1;
 
@@ -353,7 +363,16 @@ unsigned long int modulopower(unsigned long int basis, unsigned long int exponen
 }
 
 unsigned long int find_d(unsigned long int e, unsigned long int Phi){
-
+/* function find_d ***************************************
+**
+** d is the multiplicative inverse of e modulo Phi
+**
+** input:
+**      self explanatory
+** output:
+**      unsigned long int d
+**
+***************************************************************/
     unsigned long int d=1;
     int i;
 
@@ -379,7 +398,16 @@ unsigned long int decodingsingle(int cipher, unsigned long int d, unsigned long 
 }
 
 unsigned long int make_ascii_letter(unsigned long int letter){
-
+/* function make_ascii_letter ********************************************
+**
+** adds/subtracts 26 until the number is between 'A' and 'Z' in ascii code
+**
+** input:
+**      unsigned long int letter: letter that is converted into an ascii
+** output:
+**      unsigned long int ascii letter of letter
+**
+**************************************************************************/
     unsigned long int ascii=letter;
     unsigned long int i;
 
@@ -400,35 +428,13 @@ unsigned long int make_ascii_letter(unsigned long int letter){
 
 int main(){
 
-    /*//tests if codecesar and decodecesar work
-    char key = 'B';
-    char string[] = "Marmelade schmeckt echt gut!";
-    char* code;
-    char* decode;
-
-    code = codecesar(string, key);
-    printf("CAESAR-CODIERUNG und DECODIERUNG\n%s wird mit dem Schluessel %c codiert zu\n%s\n", string, key, code);
-
-    decode = decodecesar(code, key);
-    printf("und wieder entschluesselt zu:\n%s\n", decode);
-
-    //tests if codevigenere and decodevigenere work
-    char message[] = "Marmelade schmeckt echt gut!";
-    char keyword[] = "ABCD";
-    char* codetext;
-    char* decodedtext;
-
-    codetext = codevigenere(message, keyword);
-    printf("\nVIGENERE-CODIERUNG\n%s wird mit dem Schluesselwort %s codiert zu\n%s\n", message, keyword, codetext);
-
-    decodedtext = decodevigenere(codetext, keyword);
-    printf("und wieder entschluesselt zu:\n%s\n", decodedtext);*/
     char method[3];
     char direction[3];
     char message[200];
     char cipher[200];
     char key[3];
     char keyword[30];
+    char exit[3];
     char* codetextcesar;
     char* codetextvigenere;
     char* messagecesar;
@@ -436,149 +442,163 @@ int main(){
     char keyletter;
     int chosenmethod, chosendirection;
 
-    printf("\n Mit welcher Methode wollen Sie verschluesseln?\n 'C': Caesarcode\n 'V': Vigenere-Verschluesselung\n 'R': RSA-Verschluesselung\n ");
-    fgets(method, 3, stdin);
+    //RSA variables
+    unsigned long int p,q, N, Phi, e, d;
+    int Primes[20];
+    int Number1, Number2;
+    char input[200];
+    char* coded_text;
+    char* decoded_text;
+    int i, run=1, textlength;
+    unsigned long int* coded_numbers;
+    unsigned long int* decoded_numbers;
 
-    switch(*(method)){
-        case 'C': chosenmethod = CESAR; break;
-        case 'V': chosenmethod = VIGENERE; break;
-        case 'R': chosenmethod = RSA; break;
-        default: printf(" FALSCHE EINGABE: bitte C oder V eingeben!\n"); break;
-    }
+    while (run){
+        printf("\n Mit welcher Methode wollen Sie verschluesseln?\n 'C': Caesarcode\n 'V': Vigenere-Verschluesselung\n 'R': RSA-Verschluesselung\n ");
+        fgets(method, 3, stdin);
 
-    if(method[0] != 'R'){
-        printf("\n Wollen Sie codieren oder decodieren?\n 'c': Codieren\n 'd': Decodieren\n ");
-        fgets(direction, 3, stdin);
-    }
-
-    if(method[0] != 'R'){
-        switch(*(direction)){
-            case 'c': chosendirection = CODING; break;
-            case 'd': chosendirection = DECODING; break;
-            default: printf(" FALSCHE EINGABE: bitte c oder d eingeben!\n "); break;
+        //method saves the coding/decoding method
+        switch(*(method)){
+            case 'C': chosenmethod = CESAR; break;
+            case 'V': chosenmethod = VIGENERE; break;
+            case 'R': chosenmethod = RSA; break;
+            default: printf(" FALSCHE EINGABE: bitte C oder V eingeben!\n"); break;
         }
 
-    switch(chosendirection){
-        case CODING:    printf("\n Bitte geben Sie den zu verschluesselnden Text ein:\n ");
-                        fgets(message, 200, stdin);
-                        switch(chosenmethod){
-                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
-                            fgets(key, 3, stdin);
-                            keyletter = *(key);
-                            codetextcesar = codecesar(message, keyletter);
-                            printf("\n Verschluesselt ist dies:\n%s\n ", codetextcesar);
-                            break;
+        //(de)codes Cesar or Vigenere
+        if((method[0] == 'C')||(method[0] == 'V')){
+            printf("\n Wollen Sie codieren oder decodieren?\n 'c': Codieren\n 'd': Decodieren\n ");
+            fgets(direction, 3, stdin);
+            switch(*(direction)){
+                case 'c': chosendirection = CODING; break;
+                case 'd': chosendirection = DECODING; break;
+                default: printf(" FALSCHE EINGABE: bitte c oder d eingeben!\n "); break;
+            }
 
-                            case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
-                            fgets(keyword, 30, stdin);
-                            codetextvigenere = codevigenere(message, keyword);
-                            printf("\n Verschluesselt ist dies:\n%s\n ", codetextvigenere);
-                            break;
+            switch(chosendirection){
+                case CODING:    printf("\n Bitte geben Sie den zu verschluesselnden Text ein:\n ");
+                                fgets(message, 200, stdin);
+                                switch(chosenmethod){
+                                    case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
+                                    fgets(key, 3, stdin);
+                                    keyletter = *(key);
+                                    codetextcesar = codecesar(message, keyletter);
+                                    printf("\n Verschluesselt ist dies:\n %s\n ", codetextcesar);
+                                    break;
 
-                            default: printf("Error!"); break;
-                        }
-                        break;
-        case DECODING:  printf(" Bitte geben Sie den zu entschluesselnden Text ein:\n");
-                        fgets(cipher, 200, stdin);
-                        switch(chosenmethod){
-                            case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
-                            fgets(key, 3, stdin);
-                            keyletter = *(key);
-                            messagecesar = decodecesar(cipher, keyletter);
-                            printf("Entschluesselt ist dies:\n%s\n ", messagecesar);
-                            break;
+                                    case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
+                                    fgets(keyword, 30, stdin);
+                                    codetextvigenere = codevigenere(message, keyword);
+                                    printf("\n Verschluesselt ist dies:\n %s\n ", codetextvigenere);
+                                    break;
 
-                            case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
-                            fgets(keyword, 30, stdin);
-                            messagevigenere = decodevigenere(cipher, keyword);
-                            printf(" Entschluesselt ist dies:\n%s\n ", messagevigenere);
-                            break;
+                                    default: printf("Error!"); break;
+                                }
+                                break;
+                case DECODING:  printf("\n Bitte geben Sie den zu entschluesselnden Text ein:\n ");
+                                fgets(cipher, 200, stdin);
+                                switch(chosenmethod){
+                                    case CESAR: printf("\n Bitte geben Sie den Schluesselbuchstaben ein:\n ");
+                                    fgets(key, 3, stdin);
+                                    keyletter = *(key);
+                                    messagecesar = decodecesar(cipher, keyletter);
+                                    printf("\n Entschluesselt ist dies:\n %s\n ", messagecesar);
+                                    break;
 
-                            default: printf("Error!"); break;
-                        } break;
-        default: printf("Error"); break;
-    }
-    }
-    else{
-/**********************RSA******************************/
-        unsigned long int p=13, q=17;
-        unsigned long int N, Phi, e, d;
-    /*int Primes[20];
-    int Number;
+                                    case VIGENERE: printf("\n Bitte geben Sie das Schluesselwort ein:\n ");
+                                    fgets(keyword, 30, stdin);
+                                    messagevigenere = decodevigenere(cipher, keyword);
+                                    printf("\n Entschluesselt ist dies:\n %s\n ", messagevigenere);
+                                    break;
 
-    Primes[0] = 2;
-    Primes[1] = 3;
-    Primes[2] = 5;
-    Primes[3] = 7;
-    Primes[4] = 11;
-    Primes[5] = 13;
-    Primes[6] = 17;
-    Primes[7] = 19;
-    Primes[8] = 23;
-    Primes[9] = 29;
-    Primes[10] = 31;
-    Primes[11] = 37;
-    Primes[12] = 41;
-    Primes[13] = 43;
-    Primes[14] = 47;
-    Primes[15] = 53;
-    Primes[16] = 59;
-    Primes[17] = 61;
-    Primes[18] = 67;
-    Primes[19] = 71;
-
-        srand(time(NULL));
-        Number = rand()%20;
-        p = Primes[Number];
-        printf("%d\n", Number);
-        printf("%d", i);
-        srand(time(NULL));
-        Number = rand()%20;
-        q = Primes[Number];
-        printf("%d\n", Number);
-        printf("%d", i);
-
-        */
-
-        //initialization of N,Phi,e and d
-        N = p*q;
-        Phi = (p-1)*(q-1);
-        e = 23;
-        d = find_d(e,Phi);
-
-
-        char input[200];
-        char* coded_text;
-        char* decoded_text;
-        int i, textlength;
-        unsigned long int* coded_numbers;
-        unsigned long int* decoded_numbers;
-
-
-        printf("\n Geben Sie bitte den Text ein:\n ");
-        fgets(input, 200, stdin);
-
-        for(i=0;*(input+i);i++){
-            textlength = i;
+                                    default: printf("Error!"); break;
+                                } break;
+                default: printf("Error"); break;
+            }
         }
-        coded_text = (char*) malloc(textlength*sizeof(char));
-        decoded_text = (char*) malloc(textlength*sizeof(char));
-        coded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
-        decoded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
+        //codes and decodes RSA
+        else if(method[0] == 'R'){
 
-        printf("\n Mit RSA verschluesselt lautet Ihr Text:\n ");
-        for(i = 0; i < textlength; i++){
-            *(coded_numbers+i) = codingsingle(*(input+i), e, N);
-            *(coded_text+i)=make_ascii_letter(*(coded_numbers+i));
-            printf("%c", *(coded_text+i));
+            //initialization of Primes array
+            Primes[0] = 2;
+            Primes[1] = 3;
+            Primes[2] = 5;
+            Primes[3] = 7;
+            Primes[4] = 11;
+            Primes[5] = 13;
+            Primes[6] = 17;
+            Primes[7] = 19;
+            Primes[8] = 73;
+            Primes[9] = 29;
+            Primes[10] = 31;
+            Primes[11] = 37;
+            Primes[12] = 41;
+            Primes[13] = 43;
+            Primes[14] = 47;
+            Primes[15] = 53;
+            Primes[16] = 59;
+            Primes[17] = 61;
+            Primes[18] = 67;
+            Primes[19] = 71;
+
+            //chooses random prime numbers that are not equal
+            srand(time(NULL));
+            Number1 = rand()%20;
+            p = Primes[Number1];
+            p = 13;
+
+            srand(time(NULL));
+            Number2 = Number1;
+            while (Number2 == Number1){
+                Number2 = rand()%20;
+            }
+            q = Primes[Number2];
+            q = 17;
+
+            //initialization of N,Phi,e and d
+            N = p*q;
+            Phi = (p-1)*(q-1);
+            e = 23;
+            d = find_d(e,Phi);
+
+            printf("\n Geben Sie bitte den Text ein:\n ");
+            fgets(input, 200, stdin);
+
+            for(i=0;*(input+i);i++){
+                textlength = i;
+            }
+
+            coded_text = (char*) malloc(textlength*sizeof(char));
+            decoded_text = (char*) malloc(textlength*sizeof(char));
+            coded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
+            decoded_numbers = (unsigned long int*) malloc(textlength*sizeof(unsigned long int));
+
+            //encodes given text
+            printf("\n Mit RSA verschluesselt lautet Ihr Text:\n ");
+            for(i = 0; i < textlength; i++){
+                *(coded_numbers+i) = codingsingle(*(input+i), e, N);
+                *(coded_text+i)=make_ascii_letter(*(coded_numbers+i));
+                printf("%c", *(coded_text+i));
+            }
+
+            //decodes coded text
+            printf("\n\n Wieder entschluesselt lautet der Text:\n ");
+            for(i = 0; i < textlength; i++){
+                *(decoded_numbers+i) = decodingsingle(*(coded_numbers+i), e, N);
+                *(decoded_text+i)=*(decoded_numbers+i);
+                printf("%c", *(decoded_text+i));
+            }
+            printf("\n");
         }
 
-        printf("\n\n Wieder entschluesselt lautet der Text:\n ");
-        for(i = 0; i < textlength; i++){
-            *(decoded_numbers+i) = decodingsingle(*(coded_numbers+i), e, N);
-            *(decoded_text+i)=*(decoded_numbers+i);
-            printf("%c", *(decoded_text+i));
+        //stops the program if the user presses 'J'
+        printf("\n Wollen Sie das Programm beenden?\n J: Ja\n N: Nein\n ");
+        fgets(exit, 3, stdin);
+        if (*(exit) == 'J'){
+            break;
         }
+        printf("\n\n");
     }
+
     return 0;
 }
